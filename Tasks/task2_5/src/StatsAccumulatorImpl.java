@@ -1,8 +1,8 @@
 public class StatsAccumulatorImpl implements StatsAccumulator {
-    private int min;
-    private int max;
-    private int count;
-    private double avg;
+    private int min=Integer.MAX_VALUE;
+    private int max=Integer.MIN_VALUE;
+    private int count=0;
+    private double avg=0;
 
     @Override
     public void add(int value) {
