@@ -5,9 +5,13 @@ import javax.sql.DataSource;
 import com.rabbitmq.client.ConnectionFactory;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.sql.SQLException;
+
 @Configuration
+@ComponentScan("io.ylab.intensive.lesson05.eventsourcing.api")
 public class Config {
   
   @Bean
@@ -31,4 +35,5 @@ public class Config {
     connectionFactory.setVirtualHost("/");
     return connectionFactory;
   }
+
 }

@@ -1,5 +1,8 @@
 package io.ylab.intensive.lesson05.eventsourcing;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Person {
   private Long id;
   private String name;
@@ -16,6 +19,15 @@ public class Person {
     this.middleName = middleName;
   }
 
+  public String toJson() throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.writeValueAsString(this);
+  }
+
+  public static io.ylab.intensive.lesson04.eventsourcing.Person fromJson(String json) throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.readValue(json, io.ylab.intensive.lesson04.eventsourcing.Person.class);
+  }
   public Long getId() {
     return id;
   }

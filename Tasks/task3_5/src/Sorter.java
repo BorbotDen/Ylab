@@ -35,7 +35,6 @@ public class Sorter {
         }
         File sortedFile = new File(SORTFILE_DIR);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(sortedFile))) {
-            ;
             Queue<IndexElement> firstElements = new PriorityQueue<>();
             for (int i = 0; i < readers.length; i++) {
                 String line = readers[i].readLine();

@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.File;
+
 @Configuration
 @ComponentScan("io.ylab.intensive.lesson05.messagefilter")
 public class Config {
@@ -32,5 +34,10 @@ public class Config {
     dataSource.setDatabaseName("postgres");
     dataSource.setPortNumber(5432);
     return dataSource;
+  }
+  @Bean
+  public File dataFile() {
+    File dataFile =new File("BadWords.txt");
+    return dataFile;
   }
 }

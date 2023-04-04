@@ -6,5 +6,7 @@ public class MessageFilterApp {
   public static void main(String[] args) {
     AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(Config.class);
     applicationContext.start();
+    MessageFilter messageFilter = applicationContext.getBean(MessageFilter.class);
+    messageFilter.start();
   }
 }
