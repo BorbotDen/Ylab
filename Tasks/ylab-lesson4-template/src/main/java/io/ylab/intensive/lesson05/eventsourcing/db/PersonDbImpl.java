@@ -4,7 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.GetResponse;
-import io.ylab.intensive.lesson04.eventsourcing.Person;
+import io.ylab.intensive.lesson05.eventsourcing.Person;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;

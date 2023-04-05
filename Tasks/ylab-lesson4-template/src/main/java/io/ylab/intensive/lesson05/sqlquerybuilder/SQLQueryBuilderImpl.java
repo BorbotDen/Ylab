@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 public class SQLQueryBuilderImpl implements SQLQueryBuilder {
-    private DataSource dataSours;
+    private final DataSource dataSours;
 
     public SQLQueryBuilderImpl(DataSource dataSours) {
         this.dataSours = dataSours;

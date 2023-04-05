@@ -1,6 +1,7 @@
 package io.ylab.intensive.lesson05.messagefilter;
 
 import io.ylab.intensive.lesson05.DbUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -11,40 +12,48 @@ import java.util.List;
 
 @Component
 public class WordsRepository {
-    private static final String TABLE_NAME = "bad_words"; // Писать верхним регистром ОБЯЗАТЕЛЬНО!
+    private static final String TABLE_NAME = "bad_words";
     private final File dataFile;
     private final DataSource dataSource;
     private final List<String> words = new ArrayList<>();
-
+@Autowired
     public WordsRepository(File dataFile, DataSource dataSource) {
-        this.dataFile = dataFile;
-        this.dataSource = dataSource;
+    this.dataFile = dataFile;
+    this.dataSource = dataSource;
+    try (Connection connection = dataSource.getConnection()) {
+        DatabaseMetaData dbMetaData = connection.getMetaData();
+        ResultSet resultSet = dbMetaData.getTables(null, null, TABLE_NAME.toUpperCase(), new String[]{"TABLE"});
+        if (!resultSet.next()) {
+            initDb();
+        }
+        readDataFile();
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
     }
+}
 
     public void readDataFile() {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(dataFile))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 words.add(line);
-                System.out.println(line);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         saveInDataBase();
-
     }
 
     public List<String> checkMessage(String[] splitMessage) {
         List<String> badWords = new ArrayList<>();
-        String insertQuery = "SELECT word FROM bad_words WHERE LOWER (word) IN ("+getSomeQustChar(splitMessage.length)+")";
+        String insertQuery = "SELECT word FROM bad_words WHERE LOWER (word) IN (" + getSomeQustChar(splitMessage.length) + ")";
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(insertQuery);
             for (int i = 0; i < splitMessage.length; i++) {
-                statement.setString(i+1,splitMessage[i].toLowerCase());
+                statement.setString(i + 1, splitMessage[i].toLowerCase());
             }
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 badWords.add(resultSet.getString("word"));
             }
             return badWords;
@@ -54,23 +63,14 @@ public class WordsRepository {
     }
 
     private String getSomeQustChar(int length) {
-        if (length<1) {
+        if (length < 1) {
             return "";
         }
-            StringBuilder stringBuilder = new StringBuilder("?");
-        for (int i = 1; i < length; i++) {
-            stringBuilder.append(",?");
-        }
-        return stringBuilder.toString();
+        return "?" + ",?".repeat(length - 1);
     }
 
     private void saveInDataBase() {
         try (Connection connection = dataSource.getConnection()) {
-            DatabaseMetaData dbMetaData = connection.getMetaData();
-            ResultSet resultSet = dbMetaData.getTables(null, null, TABLE_NAME.toUpperCase(), new String[]{"TABLE"});
-            if (!resultSet.next()) {
-                initDb();//непонятно какой брать dataSource
-            }
             String insertQuery = ""
                     + "INSERT INTO "
                     + TABLE_NAME

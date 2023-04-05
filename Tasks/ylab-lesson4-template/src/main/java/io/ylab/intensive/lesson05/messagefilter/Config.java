@@ -37,7 +37,6 @@ public class Config {
   }
   @Bean
   public File dataFile() {
-    File dataFile =new File("BadWords.txt");
-    return dataFile;
+    return new File("BadWords.txt");
   }
 }

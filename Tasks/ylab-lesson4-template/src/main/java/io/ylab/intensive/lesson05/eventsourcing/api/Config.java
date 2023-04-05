@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import java.sql.SQLException;
-
 @Configuration
 @ComponentScan("io.ylab.intensive.lesson05.eventsourcing.api")
 public class Config {
